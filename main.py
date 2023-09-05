@@ -18,17 +18,14 @@ def get_shops():
 
     command = input("Enter a name or ID number: ")
 
-    search_data = session.query(Shop).\
-        join(Stock).\
-        join(Book).\
-        join(Publisher)
+    search_data = session.query(Book.title, Shop.name, Sale.price, Sale.count, Sale.date_sale).\
+        join(Publisher).join(Stock).join(Sale).join(Shop)
     if command.isdigit():
         _a = search_data.filter(Publisher.id == command).all()
     else:
         _a = search_data.filter(Publisher.name == command).all()
-    for record in _a:
-
-        print(record)
+    for book, shop, price, count, date in _a:
+        print(f"{book: <40} | {shop: <10} | {price*count: <8} | {date.strftime('%d-%m-%Y')}")
 
 publisher1 = Publisher(id=1, name="O\u2019Reilly")
 publisher2 = Publisher(id=2, name="Pearson")
